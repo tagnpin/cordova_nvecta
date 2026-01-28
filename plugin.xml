@@ -1,0 +1,193 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- plugin devlopment start -->
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  id="cordova-plugin-notifyvisitors"
+  version="4.1.0">
+
+  <!-- Cordova Plugin Description -->
+  <name>Notifyvisitors</name>
+  <author>Siddharth Gupta</author>
+  <description>Marketing Automation Software</description>
+  <keywords>push,notification,push notification,push
+    notifications,apns,gcm,adm,messaging,ios,android,phone</keywords>
+  <license>ISC</license>
+
+  <!-- Cordova Engine Defination  -->
+  <engines>
+    <engine name="cordova" version=">=6.4.0" />
+    <engine name="cordova-ios" version=">=4.3.0" />
+    <engine name="cordova-android" version=">=5.1.0" />
+  </engines>
+
+  <preference name="NV_LINK_URL" />
+
+  <!-- notifyvisitors.js  -->
+  <js-module name="NotifyVisitors" src="www/NotifyVisitors.js">
+    <clobbers target="NotifyVisitors" />
+  </js-module>
+
+  <!-- NVPopupDesign.js  -->
+  <js-module name="NVPopupDesign" src="www/NVPopupDesign.js">
+    <clobbers target="NVPopupDesign" />
+  </js-module>
+  <!-- End -->
+
+  <!-- Msg After Plugin Install  -->
+  <hook src="scripts/nv_after_plugin_add.js" type="after_plugin_add" />
+  <!-- End -->
+
+  <!-- Platform Android Info Start  -->
+  <platform name="android">
+
+    <!-- Copy Bridge-File notifyvisitors.java, build.gradle under Android platform  -->
+    <source-file src="src/android/NotifyVisitors.java" target-dir="src/com/plugin/notifyvisitors" />
+    <source-file src="src/android/NVUtils.java" target-dir="src/com/plugin/notifyvisitors" />
+    <source-file src="src/android/NVApplication.java" target-dir="src/com/plugin/notifyvisitors" />
+    <framework custom="true" src="src/android/build.gradle" type="gradleReference" />
+    <!-- End -->
+
+    <!-- Copy android package name in App Config.xml file  -->
+    <config-file parent="/*" target="res/xml/config.xml">
+      <feature name="NotifyVisitors">
+        <param name="android-package" value="com.plugin.notifyvisitors.NotifyVisitors" />
+      </feature>
+    </config-file>
+    <!-- End -->
+
+    <!-- Register Required Android-Permissions in App Manifest file  -->
+    <config-file target="AndroidManifest.xml" parent="/*">
+      <uses-permission android:name="android.permission.INTERNET" />
+      <!-- <uses-permission android:name="android.permission.INJECT_EVENTS" /> -->
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+      <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+      <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+      <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    </config-file>
+    <!-- End -->
+
+    <!-- Deep Link Configuration in Android Menifest file -->
+    <config-file target="AndroidManifest.xml" parent="/manifest/application/activity">
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data
+          android:host="$NV_LINK_URL"
+          android:pathPrefix="/"
+          android:scheme="https" />
+      </intent-filter>
+    </config-file>
+    <!-- End -->
+
+
+    <!-- copy google-service.json  -->
+    <hook src="scripts/nv_before_plugin_add.js" type="before_plugin_install" />
+    <!-- End -->
+
+    <!-- Register FirebaseMessagingService Service Class in App Manifest File for Recieving Push
+    Notification  -->
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <service android:exported="true"
+        android:name="com.notifyvisitors.notifyvisitors.NVFirebaseMessagingService">
+        <intent-filter>
+          <action android:name="com.google.firebase.MESSAGING_EVENT" />
+        </intent-filter>
+      </service>
+    </config-file>
+    <!-- End -->
+
+  </platform>
+  <!-- Platform Android Info End  -->
+
+  <!-- Platform IOS Info Start  -->
+  <platform name="ios">
+
+    <config-file parent="/*" target="config.xml">
+      <feature name="NotifyVisitors">
+        <param name="ios-package" value="notifyvisitors_iOS" onload="true" />
+      </feature>
+      <feature name="nvPluginAppDelegate">
+        <param name="ios-package" value="nvPluginAppDelegate" />
+      </feature>
+    </config-file>
+
+    <config-file target="*-Debug.plist" parent="aps-environment">
+      <string>development</string>
+    </config-file>
+    <config-file target="*-Release.plist" parent="aps-environment">
+      <string>production</string>
+    </config-file>
+
+
+    <!-- Import Native SDK  -->
+    <podspec>
+      <config>
+        <source url="https://cdn.cocoapods.org/" />
+      </config>
+      <pods use-frameworks="true">
+        <pod name="notifyvisitors" spec="7.3.3" />
+        <pod name="notifyvisitorsNudges" spec="0.0.2" />
+      </pods>
+    </podspec>
+    <!-- End -->
+
+    <!-- Copy Required Plugin Files in under IOS Platform  -->
+    <source-file src="src/ios/notifyvisitors_iOS.h" />
+    <source-file src="src/ios/notifyvisitors_iOS.m" />
+    <source-file src="src/ios/nvPluginAppDelegate.h" />
+    <source-file src="src/ios/nvPluginAppDelegate.m" />
+    <!-- End -->
+
+    <!-- Import Required framework in IOS -->
+    <framework src="SystemConfiguration.framework" />
+    <!-- End -->
+
+    <!-- Configure the App info.plist for notifyvisitors Plugin -->
+    <config-file target="*-Info.plist" parent="UIBackgroundModes">
+      <array>
+        <string>fetch</string>
+        <string>remote-notification</string>
+      </array>
+    </config-file>
+    
+    <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+      <array>
+        <string>whatsapp</string>
+        <string>fb</string>
+        <string>twitter</string>
+      </array>
+    </config-file>
+
+
+    <config-file target="*-Info.plist" parent="nvPushCategory">
+      <string>nvpush</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="nvViewAutoRedirection">
+      <true />
+    </config-file>
+
+
+    <!-- configure info.plist for deep link -->
+    <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+      <array>
+        <dict>
+          <key>CFBundleURLName</key>
+          <string>$PACKAGE_NAME</string>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>$NV_LINK_URL</string>
+          </array>
+        </dict>
+      </array>
+    </config-file>
+    <!-- deep-link configuration End -->
+    <!-- Configure the App info.plist End -->
+
+  </platform>
+  <!-- Platform IOS End  -->
+
+</plugin>
+<!-- plugin devlopment end -->
