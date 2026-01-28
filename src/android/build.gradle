@@ -1,0 +1,37 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url 'https://maven.google.com'
+        }
+    }
+
+    dependencies {
+        classpath 'com.google.gms:google-services:4.3.14'
+    }
+}
+
+
+cdvPluginPostBuildExtras.add({
+    afterEvaluate {
+        rootProject.subprojects {
+            if (name == "app") {
+                if (!plugins.hasPlugin('com.google.gms.google-services')) {
+                    apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
+                }
+            }
+        }
+    }
+})
+
+
+dependencies {
+   implementation fileTree(dir: 'libs', include: '*.jar')
+   implementation ('com.notifyvisitors.notifyvisitors:notifyvisitors:v5.6.2')
+   implementation("com.notifyvisitors.nudges:notifyvisitors-nudges:v0.0.8")
+
+   implementation platform('com.google.firebase:firebase-bom:33.16.0')
+   //implementation ('com.google.firebase:firebase-core')   
+   implementation ('com.google.firebase:firebase-messaging')
+}

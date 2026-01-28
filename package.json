@@ -1,0 +1,37 @@
+{
+  "version": "4.1.0",
+  "name": "cordova-plugin-notifyvisitors",
+  "cordova_name": "Notifyvisitors Push Notifications",
+  "description": "AI and Machine learning powered Personalisation, Segmentation,Omnichannel and Cross-Device Customer Engagement, Conversion rate optimization and Analytics Software. ",
+  "license": "ISC",
+  "keywords": [
+    "push",
+    "notification",
+    "push notification",
+    "push notifications",
+    "fcm",
+    "adm",
+    "retention",
+    "messaging",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "platforms": [
+    "android",
+    "ios"
+  ],
+  "cordova": {
+    "id": "cordova-plugin-notifyvisitors",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "author": "Siddharth Gupta",
+  "dependencies": {
+    "npm-cli-login": "^1.0.0"
+  }
+}
